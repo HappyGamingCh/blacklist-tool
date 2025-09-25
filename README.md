@@ -25,6 +25,10 @@ Currently available in Windows
 
 For bug reports and general feedback please use the `#💬tool-dev-chat` ([link](https://discord.com/channels/645607528297922560/680796887259021342)) in our Discord Server
 
+## Local blacklist entries
+
+The application will also load names from a local blacklist file so you can add additional accounts that are not in the shared community list. By default the configuration points to [`local-blacklist.txt`](./local-blacklist.txt) in the root of the application folder (see the `BLACKLIST_FILE_PATH` field in [`config.json`](./config.json)). Add one character name per line and restart the tool to pick up the changes. The file ships with an example entry `ANATCHA2540#9419` that you can keep or replace with your own names.
+
 ## Join Our Discord
 
 [http://discord.tftrove.com](http://discord.tftrove.com)
