@@ -9,8 +9,9 @@
     "prebuild": "npm install && npm install --only=dev",
     "fix-config-poe2": "cross-env poe2_mode=true node changeConfig.js",
     "fix-config": "cross-env poe2_mode=false node changeConfig.js",
-    "build": "echo process.env.poe2_mode = 'false'; > poever.js && npm run fix-config && electron-packager . --icon views/tft.ico --overwrite",
-    "build-poe2": "npm run prebuild && npm run fix-config-poe2 && echo process.env.poe2_mode = 'true'; > poever.js && electron-packager . TFT-Blacklist-poe2 --icon views/tft.ico --overwrite"
+    "package:win": "electron-packager . TFT-Blacklist --icon views/tft.ico --platform=win32 --arch=x64 --out=dist --overwrite",
+    "build": "echo process.env.poe2_mode = 'false'; > poever.js && npm run fix-config && npm run package:win",
+    "build-poe2": "npm run prebuild && npm run fix-config-poe2 && echo process.env.poe2_mode = 'true'; > poever.js && electron-packager . TFT-Blacklist-poe2 --icon views/tft.ico --platform=win32 --arch=x64 --out=dist --overwrite"
   },
   "dependencies": {
     "axios": "^0.24.0",

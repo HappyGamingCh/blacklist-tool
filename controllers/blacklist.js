@@ -1,8 +1,10 @@
 'use strict'
 
 const axios = require('axios').default;
+const fs = require('fs');
+const path = require('path');
 const logger = require('../util/logger');
-const { BLACKLIST_IGN } = require('../util/config').getConfig();
+const { BLACKLIST_IGN, BLACKLIST_FILE_PATH } = require('../util/config').getConfig();
 
 const BLACKLIST_URL = 'https://raw.githubusercontent.com/The-Forbidden-Trove/character_name_blacklist/main/blacklist.txt';
 const BLACKLIST_POE2_URL = 'https://raw.githubusercontent.com/The-Forbidden-Trove/character_name_blacklist/main/blacklist_poe2.txt';
@@ -16,7 +18,33 @@ module.exports = (eventEmitter) => {
       const urlToUse = process.env.poe2_mode === 'true' ? BLACKLIST_POE2_URL : BLACKLIST_URL
       const response = await axios.get(urlToUse);
 
-      const blacklist = response.data.toLowerCase().split('\n');
+      const blacklist = response.data
+        .split(/\r?\n/)
+        .map((name) => name.trim())
+        .filter(Boolean)
+        .map((name) => name.toLowerCase());
+
+      if (BLACKLIST_FILE_PATH) {
+        const resolvedPath = path.isAbsolute(BLACKLIST_FILE_PATH)
+          ? BLACKLIST_FILE_PATH
+          : path.resolve(BLACKLIST_FILE_PATH);
+
+        try {
+          const localFile = fs.readFileSync(resolvedPath, 'utf8');
+          const localEntries = localFile
+            .split(/\r?\n/)
+            .map((name) => name.trim())
+            .filter(Boolean)
+            .map((name) => name.toLowerCase());
+
+          logger.debug(`Loaded ${localEntries.length} entries from local blacklist file.`);
+          blacklist.push(...localEntries);
+        } catch (fileErr) {
+          logger.error(
+            `blacklist.js | Failed to read local blacklist file at ${resolvedPath}: ${fileErr.message}`
+          );
+        }
+      }
 
       if (BLACKLIST_IGN) {
         logger.debug(`BLACKLIST_IGN: ${BLACKLIST_IGN}`);

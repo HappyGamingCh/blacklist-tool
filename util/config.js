@@ -9,7 +9,8 @@ const filePath = path.join(__dirname, '../config.json');
 const DEFAULT_CONFIG = {
   CLIENTTXT_PATH: '',
   POE_WINDOW_TITLE: 'Path of Exile',
-  DEBUG: false
+  DEBUG: false,
+  BLACKLIST_FILE_PATH: './local-blacklist.txt'
 };
 
 let config = undefined;
